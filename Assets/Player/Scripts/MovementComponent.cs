@@ -39,12 +39,14 @@ public class MovementComponent : MonoBehaviour
         
         if (grounded)
         {
-            Debug.Log("Персонаж приземлился → анимация Duck");
-
+            _animator.SetBool("Hurt", false);
             _animator.SetBool("Duck", true);
-
-            // Через 0.2 секунды вызовется метод ResetDuck
-            Invoke(nameof(ResetDuck), 0.2f);
+            Invoke(nameof(ResetDuck), 0.3f);
+        }
+        else
+        {
+            _animator.SetBool("Jump", true);
+            _animator.SetBool("Hurt", false);
         }
     }
 
@@ -67,16 +69,14 @@ public class MovementComponent : MonoBehaviour
         _movement.x = Input.GetAxis("Horizontal");
         
         _animator.SetFloat("Move",  Mathf.Abs(_movement.x));
-        _animator.SetBool("Jump", false);
-        _animator.SetFloat("YVelocity", _rb.velocity.y);
         
         
         if (!_bIsGrounded)
         {
             if (_rb.velocity.y > 0.1f)
             {
-                _animator.SetBool("Jump", true);
-                _animator.SetBool("Hurt", false);
+                //_animator.SetBool("Jump", true);
+                //_animator.SetBool("Hurt", false);
             }
             else if (_rb.velocity.y < -0.1f)
             {
