@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public class MovementComponent : MonoBehaviour
 {
+    public Action OnBulletsSpawn;
+    
+    
     [SerializeField] private float _speed = 4f;
     [SerializeField] private float _jumpForce = 4f;
     private Vector2 _movement;
@@ -70,20 +74,18 @@ public class MovementComponent : MonoBehaviour
         
         _animator.SetFloat("Move",  Mathf.Abs(_movement.x));
         
-        
+       
         if (!_bIsGrounded)
-        {
             if (_rb.velocity.y > 0.1f)
             {
-                //_animator.SetBool("Jump", true);
-                //_animator.SetBool("Hurt", false);
+                _animator.SetBool("Jump", true);
+                _animator.SetBool("Hurt", false);
             }
             else if (_rb.velocity.y < -0.1f)
             {
                 _animator.SetBool("Jump", false);
                 _animator.SetBool("Hurt", true);
             }
-        }
         else
         {
             _animator.SetBool("Jump", false);
@@ -110,7 +112,15 @@ public class MovementComponent : MonoBehaviour
                 _animator.SetBool("Jump", true);
                 _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
             }
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnBulletsSpawn?.Invoke();
         }
+
+
+    }
 
     private void OnDisable()
     {
