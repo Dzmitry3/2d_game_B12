@@ -1,6 +1,7 @@
 using UnityEngine;
+using Enemies;
 
-public class FlyEnemy : EnemyBase
+public class FlyEnemy : EnemyBase, IConfigurable
 {
     [SerializeField] private float _flyHeight = 1.5f;
     [SerializeField] private float _flySpeed = 2f;
@@ -15,6 +16,15 @@ public class FlyEnemy : EnemyBase
         _startPosition = transform.position;
     }
 
+    
+    public void Configure(float speed, int health)
+    {
+        _speed = speed;
+        _health = health;
+    }
+
+    
+    
     public override void Move()
     {
         float direction = _movingRight ? 1f : -1f;

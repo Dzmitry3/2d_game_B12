@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a18b403b027a91a46acb44ef724bafb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slimePrefab: {fileID: 8721051738595086083, guid: 580dd0d9c12cc134b95618c3bba561d8, type: 3}
-  _flyPrefab: {fileID: 4347057159689804906, guid: a092039c7efa2f344b91f74c0051bfc9, type: 3}
+  slimePrefab: {fileID: 8721051738595086083, guid: 580dd0d9c12cc134b95618c3bba561d8, type: 3}
+  flyPrefab: {fileID: 4347057159689804906, guid: a092039c7efa2f344b91f74c0051bfc9, type: 3}

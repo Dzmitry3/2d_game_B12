@@ -1,12 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private EnemyFactory _factory;
 
+    [Header("Spawn Configurations")]
+    [SerializeField] private List<EnemySpawnData> _enemiesToSpawn = new List<EnemySpawnData>();
+
     private void Start()
     {
-        _factory.CreateEnemy("Slime", new Vector3(3, 0, 0));
-        _factory.CreateEnemy("Fly", new Vector3(-4, 2, 0));
+        _factory.Init();
+        foreach (var data in _enemiesToSpawn)
+        {
+            _factory.CreateEnemy(data.type, data.position, data.speed, data.health);
+        }
     }
 }
