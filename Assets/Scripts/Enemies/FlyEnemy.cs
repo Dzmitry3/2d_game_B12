@@ -1,15 +1,12 @@
 using UnityEngine;
 using Enemies;
 
-public class FlyEnemy : EnemyBase, IConfigurable
+public class FlyEnemy : EnemyBase, IEnemy
 {
-    [SerializeField] private float _flyHeight = 1.5f;
-    [SerializeField] private float _flySpeed = 2f;
-    [SerializeField] private float _patrolDistance = 3f;
-
-    private Vector3 _startPosition;
     private bool _movingRight = true;
-    private float _time;
+    private Vector3 _startPosition;
+
+    [SerializeField] private float _patrolDistance = 3f;
 
     private void Start()
     {
@@ -17,10 +14,9 @@ public class FlyEnemy : EnemyBase, IConfigurable
     }
 
     
-    public void Configure(float speed, int health)
+    public override void Init(EnemyFactory factory, EnemyType type, float speed, int health)
     {
-        _speed = speed;
-        _health = health;
+        base.Init(factory, type, speed, health);
     }
 
     
@@ -28,11 +24,7 @@ public class FlyEnemy : EnemyBase, IConfigurable
     public override void Move()
     {
         float direction = _movingRight ? 1f : -1f;
-        transform.Translate(Vector2.right * _flySpeed * Time.deltaTime * direction);
-        
-        _time += Time.deltaTime * _speed;
-        float newY = _startPosition.y + Mathf.Sin(_time) * _flyHeight * 0.5f;
-        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        transform.Translate(Vector2.right * _speed * Time.deltaTime * direction);
         
         float distanceFromStart = transform.position.x - _startPosition.x;
         if (Mathf.Abs(distanceFromStart) >= _patrolDistance)

@@ -1,56 +1,103 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Enemies;
 
-public enum EnemyType
+
+namespace Enemies
 {
-    Slime,
-    Fly
-}
-
-public class EnemyFactory : MonoBehaviour
-{
-    [Header("Enemy Prefabs")]
-    [SerializeField] private GameObject slimePrefab;
-    [SerializeField] private GameObject flyPrefab;
-
-    private Dictionary<EnemyType, GameObject> _enemyPrefabs;
-    
-    
-    public void Init()
+    public enum EnemyType
     {
-        _enemyPrefabs = new Dictionary<EnemyType, GameObject>
-        {
-            { EnemyType.Slime, slimePrefab },
-            { EnemyType.Fly, flyPrefab }
-        };
+        Slime,
+        Fly
     }
 
-    /*private void Awake()
+    public class EnemyFactory : MonoBehaviour
     {
-        _enemyPrefabs = new Dictionary<EnemyType, GameObject>
-        {
-            { EnemyType.Slime, slimePrefab },
-            { EnemyType.Fly, flyPrefab }
-        };
-    }*/
+        [Header("Enemy Prefabs")]
+        [SerializeField] private GameObject slimePrefab;
+        [SerializeField] private GameObject flyPrefab;
 
-    public EnemyBase CreateEnemy(EnemyType type, Vector3 position, float speed, int health)
-    {
-        if (!_enemyPrefabs.TryGetValue(type, out var prefab) || prefab == null)
+        [Header("Pool Settings")] [SerializeField]
+        private int poolSizePerType = 3;
+
+        private Dictionary<EnemyType, GameObject> _enemyPrefabs;
+        private Dictionary<EnemyType, Queue<GameObject>> _enemyPools;
+        
+        public void ReturnToPool(EnemyType type, GameObject enemy)
         {
-            Debug.LogError($"❌ Enemy prefab for {type} not assigned!");
-            return null;
+            var enemyBase = enemy.GetComponent<EnemyBase>();
+            enemy.SetActive(false);
+            _enemyPools[type].Enqueue(enemy);
         }
 
-        var enemyObj = Instantiate(prefab, position, Quaternion.identity);
-        var enemy = enemyObj.GetComponent<EnemyBase>();
 
-        if (enemy is IConfigurable configurable)
-            configurable.Configure(speed, health);
-        else
-            Debug.LogWarning($"{type} doesn't implement IConfigurable");
+        private void FactoryInitialized()
+        {
+            if (_enemyPrefabs != null && _enemyPools != null)
+                return;
+            
+            _enemyPrefabs = new Dictionary<EnemyType, GameObject>
+            {
+                { EnemyType.Slime, slimePrefab },
+                { EnemyType.Fly, flyPrefab }
+            };
 
-        return enemy;
+            _enemyPools = new Dictionary<EnemyType, Queue<GameObject>>();
+            
+            foreach (var kvp in _enemyPrefabs)
+            {
+                var type = kvp.Key;
+                var prefab = kvp.Value;
+
+                Queue<GameObject> pool = new Queue<GameObject>();
+                for (int i = 0; i < poolSizePerType; i++)
+                {
+                    GameObject enemy = Instantiate(prefab);
+                    enemy.SetActive(false);
+                    pool.Enqueue(enemy);
+                }
+
+                _enemyPools[type] = pool;
+            }
+            
+        }
+        
+        
+        public EnemyBase CreateEnemy(EnemyType type, Vector3 position, float speed, int health)
+        {
+            FactoryInitialized();
+            
+            if (!_enemyPrefabs.TryGetValue(type, out var prefab) || prefab == null)
+            {
+                Debug.LogError($"[Factory] Missing prefab for {type}");
+                return null;
+            }
+            
+            if (!_enemyPools.TryGetValue(type, out var pool))
+            {
+                pool = new Queue<GameObject>();
+                _enemyPools[type] = pool;
+            }
+            
+            GameObject enemyObj;
+            if (pool.Count > 0)
+            {
+                enemyObj = pool.Dequeue();
+            }
+            else
+            {
+                enemyObj = Instantiate(prefab);
+            }
+            
+            enemyObj.transform.position = position;
+            enemyObj.SetActive(true);
+            enemyObj.transform.position = position;
+            enemyObj.SetActive(true);
+
+            EnemyBase enemyBase = enemyObj.GetComponent<EnemyBase>();
+
+            enemyBase.Init(this, type, speed, health);
+            
+            return enemyBase;
+        }
     }
 }

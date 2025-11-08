@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slimePrefab: {fileID: 8721051738595086083, guid: 580dd0d9c12cc134b95618c3bba561d8, type: 3}
   flyPrefab: {fileID: 4347057159689804906, guid: a092039c7efa2f344b91f74c0051bfc9, type: 3}
+  poolSizePerType: 3

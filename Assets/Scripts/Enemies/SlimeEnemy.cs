@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Enemies;
 
-public class SlimeEnemy : EnemyBase, IConfigurable
+public class SlimeEnemy : EnemyBase, IEnemy
 {
     private bool _movingRight = true;
     [SerializeField] private Transform _groundCheck;
@@ -12,23 +10,30 @@ public class SlimeEnemy : EnemyBase, IConfigurable
 
     
     
-    public void Configure(float speed, int health)
+    public override void Init(EnemyFactory factory, EnemyType type, float speed, int health)
     {
-        _speed = speed;
-        _health = health;
+        base.Init(factory, type, speed, health);
     }
     
     
     public override void Move()
     {
-        transform.Translate(Vector2.right * _speed * Time.deltaTime * (_movingRight ? 1 : -1));
-
-        RaycastHit2D hit = Physics2D.Raycast(_groundCheck.position, Vector2.down, _checkDistance, _groundLayer);
-        if (!hit)
+        float direction = _movingRight ? 1f : -1f;
+        transform.Translate(Vector2.right * _speed * Time.deltaTime * direction);
+        
+        if (!Physics2D.Raycast(_groundCheck.position, Vector2.down, _checkDistance, _groundLayer))
+        {
             _movingRight = !_movingRight;
-
-        transform.localScale = new Vector3(_movingRight ? -1 : 1, 1, 1);
+            Flip();
+        }
     }
+    private void Flip()
+    {
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
 
     private void Update()
     {

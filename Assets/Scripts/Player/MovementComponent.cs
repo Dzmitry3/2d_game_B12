@@ -5,22 +5,15 @@ public class MovementComponent : MonoBehaviour
 {
     public Action OnBulletsSpawn;
     
-    
     [SerializeField] private float _speed = 4f;
     [SerializeField] private float _jumpForce = 4f;
+    
     private Vector2 _movement;
-    
-    
-    //[SerializeField]private Transform _groundCheck;
-    //[SerializeField]private float _groundCheckRadius = 0.2f;
-    
     private Rigidbody2D _rb;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-    
     private GroundChecker _groundCheck;
     private bool _bIsGrounded;
-    
     private int[] _numbers;
     private bool _facingRight = true;
 
@@ -43,20 +36,20 @@ public class MovementComponent : MonoBehaviour
         
         if (grounded)
         {
-            _animator.SetBool("Hurt", false);
-            _animator.SetBool("Duck", true);
-            Invoke(nameof(ResetDuck), 0.3f);
+            _animator.SetBool("Fall", false);
+            _animator.SetBool("Landing", true);
+            Invoke(nameof(ResetLanding), 0.3f);
         }
         else
         {
             _animator.SetBool("Jump", true);
-            _animator.SetBool("Hurt", false);
+            _animator.SetBool("Fall", false);
         }
     }
 
-    private void ResetDuck()
+    private void ResetLanding()
     {
-        _animator.SetBool("Duck", false);
+        _animator.SetBool("Landing", false);
     }
     
     void Start()
@@ -66,8 +59,6 @@ public class MovementComponent : MonoBehaviour
 
     void Update()
     {
-        //_bIsGrounded  = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);
-
         _groundCheck.CheckGround();
 
         _movement.x = Input.GetAxis("Horizontal");
@@ -79,17 +70,17 @@ public class MovementComponent : MonoBehaviour
             if (_rb.velocity.y > 0.1f)
             {
                 _animator.SetBool("Jump", true);
-                _animator.SetBool("Hurt", false);
+                _animator.SetBool("Fall", false);
             }
             else if (_rb.velocity.y < -0.1f)
             {
                 _animator.SetBool("Jump", false);
-                _animator.SetBool("Hurt", true);
+                _animator.SetBool("Fall", true);
             }
         else
         {
             _animator.SetBool("Jump", false);
-            _animator.SetBool("Hurt", false);
+            _animator.SetBool("Fall", false);
         }
 
         

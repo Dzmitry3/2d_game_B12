@@ -6,15 +6,14 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Transform _bulletSpawnPoint;
-    /*private GameObject[] _childObjects;
-    private Transform _bulletSpawnPoint;*/
+    [SerializeField] private BulletPool _bulletPool;
     
     private MovementComponent _movement;
     private void Awake()
     {
         _movement = GetComponent<MovementComponent>();
-        //_childObjects = GetComponentsInChildren<GameObject>();
     }
 
     private void OnEnable()
@@ -24,15 +23,19 @@ public class Player : MonoBehaviour
 
     private void OnBulletsSpawn()
     {
-        /*foreach (var go in _childObjects)
-        {
-            if (go.CompareTag("BulletsSpawnPoint "))
-            {
-                _bulletSpawnPoint = go.transform;
-            }
-        }*/
-        
-        Instantiate(_bulletPrefab, _bulletSpawnPoint.position, Quaternion.identity);
+        GameObject bullet = _bulletPool.GetBullet();
+        if (bullet == null)
+            return; // пул закончился
+
+        // определяем направление
+        int direction = _spriteRenderer.flipX ? -1 : 1;
+        // активируем пулю
+        bullet.transform.position = _bulletSpawnPoint.position;
+        bullet.transform.rotation = Quaternion.identity;
+        bullet.SetActive(true);
+
+        // передаём направление
+        bullet.GetComponent<BulletsMoveComponent>().Init(direction);
         
     }
     private void OnDisable()
