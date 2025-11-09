@@ -84,7 +84,6 @@ public class MovementComponent : MonoBehaviour
         }
 
         
-        
         _rb.velocity = new Vector2(_movement.x * _speed, _rb.velocity.y);
 
         if (_movement.x > 0 && !_facingRight)

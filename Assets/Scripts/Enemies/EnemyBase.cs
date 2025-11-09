@@ -12,8 +12,6 @@ namespace Enemies
         private EnemyType _type;
         public abstract void Move();
         
-        
-        
         public virtual void Init(EnemyFactory factory, EnemyType type, float speed, int health)
         {
             _factory = factory;
@@ -21,8 +19,6 @@ namespace Enemies
             _speed = speed;
             _health = health;
         }
-        
-
         
         public void ReturnToPool()
         {

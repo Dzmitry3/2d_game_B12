@@ -57,7 +57,6 @@ public class BulletsMoveComponent : MonoBehaviour
     }
 
     
-    
     void Update()
     {
         if (_isExploding) return;

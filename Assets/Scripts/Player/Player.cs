@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
         _movement.OnBulletsSpawn += OnBulletsSpawn;
     }
 
+    
     private void OnBulletsSpawn()
     {
         GameObject bullet = _bulletPool.GetBullet();

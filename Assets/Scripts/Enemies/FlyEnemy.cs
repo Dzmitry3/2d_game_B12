@@ -20,7 +20,6 @@ public class FlyEnemy : EnemyBase, IEnemy
     }
 
     
-    
     public override void Move()
     {
         float direction = _movingRight ? 1f : -1f;

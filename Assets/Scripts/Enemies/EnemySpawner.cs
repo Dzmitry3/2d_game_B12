@@ -8,7 +8,7 @@ public class EnemySpawner : MonoBehaviour
     private class EnemySpawnData
     {
         public EnemyType type;
-        public Vector3 position;
+        public Vector2 position;
         public float speed = 1f;
         public int health = 3;
     }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -8,6 +9,11 @@ namespace Enemies
     {
         Slime,
         Fly
+    }
+    
+    public interface IEnemy
+    {
+        void Init(EnemyFactory factory, EnemyType type, float speed, int health);
     }
 
     public class EnemyFactory : MonoBehaviour
@@ -30,7 +36,8 @@ namespace Enemies
         }
 
 
-        private void FactoryInitialized()
+        //private void Awake()
+       private void FactoryInitialized()
         {
             if (_enemyPrefabs != null && _enemyPools != null)
                 return;
@@ -66,11 +73,7 @@ namespace Enemies
         {
             FactoryInitialized();
             
-            if (!_enemyPrefabs.TryGetValue(type, out var prefab) || prefab == null)
-            {
-                Debug.LogError($"[Factory] Missing prefab for {type}");
-                return null;
-            }
+            var prefab = _enemyPrefabs[type];
             
             if (!_enemyPools.TryGetValue(type, out var pool))
             {
@@ -90,11 +93,7 @@ namespace Enemies
             
             enemyObj.transform.position = position;
             enemyObj.SetActive(true);
-            enemyObj.transform.position = position;
-            enemyObj.SetActive(true);
-
             EnemyBase enemyBase = enemyObj.GetComponent<EnemyBase>();
-
             enemyBase.Init(this, type, speed, health);
             
             return enemyBase;

@@ -18,6 +18,7 @@ public class BulletPool : MonoBehaviour
         }
     }
 
+    
     public GameObject GetBullet()
     {
         foreach (var bullet in _pool)

@@ -22,7 +22,7 @@ public class GroundChecker : MonoBehaviour
             bIsGrounded = hit;
             OnGroundStateChange?.Invoke(bIsGrounded);
         }
-
+        
         Debug.DrawLine(transform.position, Vector2.down * rayCastDistance, bIsGrounded ? Color.green : Color.red);
     }
 }

@@ -7,7 +7,6 @@ public class SlimeEnemy : EnemyBase, IEnemy
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _checkDistance = 0.5f;
-
     
     
     public override void Init(EnemyFactory factory, EnemyType type, float speed, int health)
