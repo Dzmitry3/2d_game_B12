@@ -93,10 +93,10 @@ namespace Enemies
             
             enemyObj.transform.position = position;
             enemyObj.SetActive(true);
-            EnemyBase enemyBase = enemyObj.GetComponent<EnemyBase>();
-            enemyBase.Init(this, type, speed, health);
+            EnemyBase enemy = enemyObj.GetComponent<EnemyBase>();
+            enemy.Init(this, type, speed, health);
             
-            return enemyBase;
+            return enemy;
         }
     }
 }
